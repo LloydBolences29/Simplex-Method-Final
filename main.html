@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="main.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+    <title>Simplex Method</title>
+
+</head>
+
+<body>
+    <div class="container">
+        <nav id="nav">
+            <h1 id="h1">Simplex Method</h1>
+        </nav>
+    </div>
+
+    <br>
+
+
+    <div class="row">
+        <div class="col">
+            <div class="container" id="tableContainer">
+
+                <!-- Table area -->
+                <table class="table" id="myTable">
+                    <tr>
+                        <th> <span>
+                                CJ
+                            </span>
+                        </th>
+
+                        <th> <span>
+                                Solution Mix
+                            </span>
+                        </th>
+
+                        <th>
+                            <div class="row">
+                                <span id="AVal">
+                                    -
+                                </span>
+                            </div>
+                            <div class="row">
+                                <span>
+                                    A
+                                </span>
+                            </div>
+                        </th>
+
+                        <th>
+                            <div class="row">
+                                <span id="BVal">
+                                    -
+                                </span>
+                            </div>
+                            <div class="row">
+                                <span id="B">
+                                    B
+                                </span>
+                            </div>
+                        </th>
+
+
+                        <th>
+                            <div class="row">
+                                <span id="S1Val">
+                                    0
+                                </span>
+                            </div>
+                            <div class="row">
+                                <span>
+                                    S1
+                                </span>
+                            </div>
+                        </th>
+
+                        <th>
+                            <div class="row">
+                                <span id="S2Val">
+                                    0
+                                </span>
+                            </div>
+                            <div class="row">
+                                <span>
+                                    S2
+                                </span>
+                            </div>
+                        </th>
+
+                        <th> <span>
+                                Quantity
+                            </span>
+                        </th>
+                    </tr>
+                    <!-- Data section -->
+                    <tr id="dataSection">
+                        <td id="cj1">0</td>
+                        <td id="S1">S1</td>
+                    </tr>
+                    <tr id="2nddataSection">
+                        <td id="cj2">0</td>
+                        <td id="S2">S2</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <div class="col">
+            <div class="container">
+                <h5> Objective Functions </h5>
+
+            </div>
+
+        </div>
+    </div>
+
+
+    <!--Modal Section-->
+
+    <!-- Button trigger modal -->
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+        Input
+    </button>
+
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+
+                    <form action=""></form>
+                    <!--For First Constraints-->
+                    <div class="row">
+                        <h5>Constraints</h5>
+                        <div class="col">
+                            <h6>Constraint A1</h6>
+                            <input type="number" class="form-control" id="A1">
+
+                        </div>
+                        <div class="col">
+                            <h6>Constraint B1</h6>
+                            <input type="number" class="form-control" id="B1">
+                        </div>
+                        <div class="col">
+                            <h6>Quantity 1</h6>
+                            <input type="number" class="form-control" id="quantity1">
+                        </div>
+
+                    </div>
+                    <!--Second Constraints-->
+                    <div class="row">
+                        <div class="col">
+                            <h6>Constraint A2</h6>
+                            <input type="number" class="form-control" id="A2">
+
+                        </div>
+                        <div class="col">
+                            <h6>Constraint B2</h6>
+                            <input type="number" class="form-control" id="B2">
+                        </div>
+                        <div class="col">
+                            <h6>Quantity 2</h6>
+                            <input type="number" class="form-control" id="quantity2">
+                        </div>
+
+                    </div>
+                    <!--Objective Functions-->
+                    <div class="row">
+                        <h5>Objective Functions</h5>
+                        <div class="col">
+                            <h6>A</h6>
+                            <input type="number" class="form-control" id="objA">
+                        </div>
+                        <div class="col">
+                            <h6>B</h6>
+                            <input type="number" class="form-control" id="objB">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="save-btn">Save changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
+
+    <script src="main.js"></script>
+</body>
+
+
+</html>

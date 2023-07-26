@@ -1,0 +1,15 @@
+body{
+    padding: 10px;
+    margin: 0;
+    border: 0;
+}
+nav{
+    border: black 1px solid;
+}
+#h1{
+    text-align: center;
+}
+
+tr{
+    border: black 2px solid;
+}
