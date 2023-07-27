@@ -1,14 +1,14 @@
 window.onload = () => { console.log("document is ready") }
 
 var cjColumn = [0, 0];
-var solutionMixVar = [];
-var objFunc = [];
 var constraintS1 = [];
 var constraintS2 = [];
+var objFunc = [];
+var constraintValue = ['A', 'B', 'S1', 'S2',];
 var solutionMix = ['S1', 'S2']
+var productionMix = ['A', 'B']
 var ZjVal = []
 var cjZjVal = []
-var productionMix = ['A', 'B']
 var isOPtimized = true
 var AVal = document.getElementById('AVal')
 var BVal = document.getElementById('BVal')
@@ -110,25 +110,31 @@ var getOptimization = () => {
 
     if (val1 < val2) {
         pivotRow = constraintS1
-        S1.textContent = productionMix[pivotIndex]
-        cj1.textContent = objFunc[pivotIndex]
+        // S1.textContent = productionMix[pivotIndex]
+        // cj1.textContent = objFunc[pivotIndex]
         pivot = pivotRow[pivotIndex]
+        
 
     } else {
         pivotRow = constraintS2
-        S2.textContent = productionMix[pivotIndex]
-        cj2.textContent = objFunc[pivotIndex]
+        // S2.textContent = productionMix[pivotIndex]
+        // cj2.textContent = objFunc[pivotIndex]
         pivot = pivotRow[pivotIndex]
     }
+    console.log(pivotIndex)
+    cjColumn[pivotIndex] = objFunc[0]
+    console.log(cjColumn)
 
+    
     //Step 10 Divide all the entries in the pivot row by the pivot
-    var newConstraint1 = []
     for (let i = 0; i < pivotRow.length; i++) {
-        newConstraint1[i] = pivotRow[i] / pivot
+        pivotRow[i] = pivotRow[i] / pivot
     }
-    console.log(newConstraint1)
+    console.log(constraintS1)
+    console.log(constraintS2)
 
-    //create the second table
+    //create the second table and its headings
+
     var secondTable = document.createElement('table')
     secondTable.classList.add('table')
     secondTable.setAttribute('id', 'secondtable')
@@ -145,28 +151,53 @@ var getOptimization = () => {
     solutionMixTh.appendChild(solutionMixThSpan)
     newTr.appendChild(solutionMixTh)
 
-    var objTh = document.createElement('th')
-    var divTh = document.createElement('div')
-    divTh.classList.add('row')
-    var aValThSpan = document.createElement('span')
-    aValThSpan.setAttribute('id','AVal')
-    aValThSpan.textContent = objFunc[0]
-    var div2Th = document.createElement('div')
-    div2Th.classList.add('row')
-    var aThSpan = document.createElement('span')
-    aThSpan.textContent = productionMix[0]
 
-    
-    divTh.appendChild(aValThSpan)
-    div2Th.appendChild(aThSpan)
-    objTh.appendChild(divTh)
-    objTh.appendChild(div2Th)
-    newTr.appendChild(objTh)
+    for (let i = 0; i < objFunc.length; i++) {
+        var objTh = document.createElement('th')
+        var divTh = document.createElement('div')
+        divTh.classList.add('row')
+        var thSpan = document.createElement('span')
+        thSpan.setAttribute('id', `${constraintValue[i]}Val`)
+        thSpan.textContent = objFunc[i]
 
+        var div2Th = document.createElement('div')
+        div2Th.classList.add('row')
+        var prodThSpan = document.createElement('span')
+        prodThSpan.textContent = constraintValue[i]
 
+        divTh.appendChild(thSpan)
+        div2Th.appendChild(prodThSpan)
+        objTh.appendChild(divTh)
+        objTh.appendChild(div2Th)
+        newTr.appendChild(objTh)
+
+    }
+
+    var qtyTh =document.createElement('th')
+    var qtySpan = document.createElement('Span')
+    qtySpan.textContent="Quantity"
+    qtyTh.appendChild(qtySpan)
+    newTr.appendChild(qtyTh)
     newTb.appendChild(newTr)
     secondTable.appendChild(newTb)
     tableContainer.appendChild(secondTable)
+
+    //create data section
+    var secondDataSectTr = document.createElement('tr')
+    secondDataSectTr.setAttribute('id', 'firstdataSect2ndTable')
+    var tdobj = document.createElement('td')
+    var tdSlack = document.createElement('td')
+    tdobj.textContent = cjColumn[pivotIndex]
+    tdSlack.textContent = productionMix[pivotIndex]
+
+    secondDataSectTr.appendChild(tdobj)
+    secondDataSectTr.appendChild(tdSlack)
+    addRow(constraintS1, secondDataSectTr)
+    newTb.appendChild(secondDataSectTr)
+
+
+
+
 
 
 
@@ -211,8 +242,13 @@ saveBtn.addEventListener("click", (e) => {
 
     //flashing to the document the values
     addRow(constraintS1, first)
+    console.log(constraintS1)
     addRow(constraintS2, second)
-
+    console.log(constraintS2)
+    cj1.textContent = cjColumn[0]
+    S1.textContent = solutionMix[0]
+    cj2.textContent = cjColumn[1]
+    S2.textContent = solutionMix[1]
     //adding Zj value
     createZJ()
 
@@ -246,6 +282,8 @@ saveBtn.addEventListener("click", (e) => {
     checkIfOptimized()
     console.log(isOPtimized)
     getOptimization()
+
+    console.log(objFunc)
 
 
 
