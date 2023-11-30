@@ -11,7 +11,6 @@ var solutionMix = ['S1', 'S2']
 var productionMix = ['A', 'B']
 var ZjVal = []
 var cjZjVal = []
-// var isOPtimized = true
 var AVal = document.getElementById('AVal')
 var BVal = document.getElementById('BVal')
 var S1Val = document.getElementById('S1Val')
@@ -344,7 +343,6 @@ var getOptimization = () => {
     // createZJ(secondTable)
     cjMinZjVal(secondTable)
     checkIfOptimized(getOptimization)
-    // console.log(cjZjVal)
     console.log(cjZjVal)
 }
 
