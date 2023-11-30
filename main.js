@@ -1,5 +1,7 @@
 window.onload = () => { console.log("document is ready") }
 
+var otherRow
+var pivotRow
 var cjColumn = [0, 0];
 var constraintS1 = [];
 var constraintS2 = [];
@@ -9,7 +11,7 @@ var solutionMix = ['S1', 'S2']
 var productionMix = ['A', 'B']
 var ZjVal = []
 var cjZjVal = []
-var isOPtimized = true
+// var isOPtimized = true
 var AVal = document.getElementById('AVal')
 var BVal = document.getElementById('BVal')
 var S1Val = document.getElementById('S1Val')
@@ -22,12 +24,43 @@ var S2 = document.getElementById('S2')
 var cj1 = document.getElementById('cj1')
 var cj2 = document.getElementById('cj2')
 var tableContainer = document.getElementById('tableContainer')
-
-
+var highestNum
+var newTb
+var newTr
+var cjTh
+var cjThSpan
+var solutionMixTh
+var solutionMixThSpan
+var secondTable
+var secondDataSection2ndTr
 
 
 
 //functions
+var cjMinZjVal = (table) => {
+    var newRow = document.createElement("tr")
+    newRow.id = 'CjZJRow'
+    var blankCell = document.createElement('td')
+    blankCell.textContent = "-"
+    var newCell = document.createElement('td')
+    newCell.textContent = 'Cj - Zj'
+    newRow.appendChild(blankCell)
+    newRow.appendChild(newCell)
+    table.appendChild(newRow)
+
+
+
+    //computing for the values of the CJ - Zj 
+    for (let i = 0; i < objFunc.length; i++) {
+        cjZjVal[i] = objFunc[i] - ZjVal[i]
+        var cjZjCell = document.createElement('td')
+        cjZjCell.textContent = cjZjVal[i]
+        newRow.appendChild(cjZjCell)
+        table.appendChild(newRow)
+
+    }
+    console.log(cjZjVal)
+}
 
 //initializing the S1 and S2 values
 var addRow = (arr, dataSection) => {
@@ -41,112 +74,23 @@ var addRow = (arr, dataSection) => {
 
 }
 
-//creating Zj and its Values
-var createZJ = () => {
-    var newRow = document.createElement('tr')
-    newRow.id = 'ZjVal';
-    var blankCell = document.createElement('td')
-    blankCell.textContent = "-"
-    var newCell = document.createElement('td')
-    newCell.textContent = "Zj"
-    newRow.appendChild(blankCell);
-    newRow.appendChild(newCell)
-    myTable.appendChild(newRow)
 
-    //computation for ZJ Values
-
-    var tempArr1 = []
-    var tempArr2 = []
-
-    for (let i = 0; i < constraintS1.length; i++) {
-        tempArr1[i] = cjColumn[0] * constraintS1[i]
-        tempArr2[i] = cjColumn[1] * constraintS2[i]
-
-        ZjVal[i] = tempArr1[i] + tempArr2[i]
-    }
-
-    for (let i = 0; i < ZjVal.length; i++) {
-        var zjCell = document.createElement('td')
-        zjCell.textContent = ZjVal[i]
-        newRow.appendChild(zjCell)
-        myTable.appendChild(newRow)
-    }
-}
-
-//checking
-var checkIfOptimized = () => {
-    return cjZjVal.every((e) => {
-        e <= 0 ? isOPtimized = true : isOPtimized = false
-
-    })
-}
-
-//Function for getting optimized
-var getOptimization = () => {
-
-    //getting the pivotal column
-    let highestNum;
-
-    for (let i = 0; i < cjZjVal.length; i++) {
-        highestNum = cjZjVal[0]
-        if (cjZjVal[i] > highestNum) {
-            highestNum = cjZjVal[i]
-
-        }
-    }
-    var pivotIndex = cjZjVal.indexOf(highestNum)
-
-
-    //getting the pivotal row 
-    var qty1 = constraintS1[4]
-    var qty2 = constraintS2[4]
-
-    var val1 = qty1 / constraintS1[pivotIndex]
-    var val2 = qty2 / constraintS2[pivotIndex]
-
-    //changing the value in cj column and production mix and setting up the value of the pivot /Step 9 
-    var pivotRow
-    var pivot
-
-    if (val1 < val2) {
-        pivotRow = constraintS1
-        // S1.textContent = productionMix[pivotIndex]
-        // cj1.textContent = objFunc[pivotIndex]
-        pivot = pivotRow[pivotIndex]
-        
-
-    } else {
-        pivotRow = constraintS2
-        // S2.textContent = productionMix[pivotIndex]
-        // cj2.textContent = objFunc[pivotIndex]
-        pivot = pivotRow[pivotIndex]
-    }
-    console.log(pivotIndex)
-    cjColumn[pivotIndex] = objFunc[0]
-    console.log(cjColumn)
-
-    
-    //Step 10 Divide all the entries in the pivot row by the pivot
-    for (let i = 0; i < pivotRow.length; i++) {
-        pivotRow[i] = pivotRow[i] / pivot
-    }
-    console.log(constraintS1)
-    console.log(constraintS2)
-
+//create the headings of the table
+var createTableHeadings = () => {
     //create the second table and its headings
 
-    var secondTable = document.createElement('table')
+    secondTable = document.createElement('table')
     secondTable.classList.add('table')
     secondTable.setAttribute('id', 'secondtable')
-    var newTb = document.createElement('tbody')
-    var newTr = document.createElement('tr')
-    var cjTh = document.createElement('th')
-    var cjThSpan = document.createElement('span')
+    newTb = document.createElement('tbody')
+    newTr = document.createElement('tr')
+    cjTh = document.createElement('th')
+    cjThSpan = document.createElement('span')
     cjThSpan.textContent = 'CJ'
     cjTh.appendChild(cjThSpan)
     newTr.appendChild(cjTh)
-    var solutionMixTh = document.createElement('th')
-    var solutionMixThSpan = document.createElement('span')
+    solutionMixTh = document.createElement('th')
+    solutionMixThSpan = document.createElement('span')
     solutionMixThSpan.textContent = "Solution Mix"
     solutionMixTh.appendChild(solutionMixThSpan)
     newTr.appendChild(solutionMixTh)
@@ -173,38 +117,235 @@ var getOptimization = () => {
 
     }
 
-    var qtyTh =document.createElement('th')
+    var qtyTh = document.createElement('th')
     var qtySpan = document.createElement('Span')
-    qtySpan.textContent="Quantity"
+    qtySpan.textContent = "Quantity"
     qtyTh.appendChild(qtySpan)
     newTr.appendChild(qtyTh)
     newTb.appendChild(newTr)
     secondTable.appendChild(newTb)
     tableContainer.appendChild(secondTable)
 
+}
+
+
+//creating Zj and its Values
+var createZJ = (table) => {
+    var newRow = document.createElement('tr')
+    newRow.id = 'ZjVal';
+    var blankCell = document.createElement('td')
+    blankCell.textContent = "-"
+    var newCell = document.createElement('td')
+    newCell.textContent = "Zj"
+    newRow.appendChild(blankCell);
+    newRow.appendChild(newCell)
+    table.appendChild(newRow)
+
+    //computation for ZJ Values
+
+    var tempArr1 = []
+    var tempArr2 = []
+
+    for (let i = 0; i < constraintS1.length; i++) {
+        tempArr1[i] = cjColumn[0] * constraintS1[i]
+        tempArr2[i] = cjColumn[1] * constraintS2[i]
+
+        ZjVal[i] = tempArr1[i] + tempArr2[i]
+        var zjCell = document.createElement('td')
+        zjCell.textContent = ZjVal[i]
+        newRow.appendChild(zjCell)
+        table.appendChild(newRow)
+    }
+
+
+}
+
+//checking
+var checkIfOptimized = () => {
+    isOPtimized = cjZjVal.every((e) => e <= 0)
+    console.log(isOPtimized)
+    if (isOPtimized==false) {
+        getOptimization()
+        console.log(isOPtimized)
+        return
+    } else {
+        console.log("Optimized")
+        isOPtimized = true
+    }
+
+}
+
+//Function for getting optimized
+var getOptimization = () => {
+
+    //getting the pivotal column
+    console.log(cjZjVal)
+
+    //get the highest Number in the cjZjval array
+    highestNum = Math.max(...cjZjVal);
+    var pivotIndex = cjZjVal.indexOf(highestNum)
+    console.log(pivotIndex)
+
+
+    //getting the pivotal row 
+    var qty1 = constraintS1[4]
+    var qty2 = constraintS2[4]
+
+    var val1 = qty1 / constraintS1[pivotIndex]
+    console.log(qty1)
+    var val2 = qty2 / constraintS2[pivotIndex]
+    console.log(qty2)
+    console.log(val2)
+
+    //changing the value in cj column and production mix and setting up the value of the pivot /Step 9 
+    var pivot
+    var slackVal1 = solutionMix[0]
+    var slackVal2 = solutionMix[1]
+    var cjCol
+    var othercjCol
+    console.log(pivotIndex)
+
+
+    if (val1 < val2) {
+        pivotRow = constraintS1
+        otherRow = constraintS2
+        cjColumn[pivotIndex] = highestNum
+        solutionMix[0] = productionMix[0]
+        pivot = constraintS1[pivotIndex]
+        cjCol = cjColumn[0]
+        othercjCol = cjColumn[1]
+        slackVal1 = productionMix[pivotIndex]
+        cjColumn[pivotIndex] = objFunc[pivotIndex]
+        var negateNum = -constraintS2[pivotIndex]
+
+        //updating the constraints arrays and divide the entries by the pivot
+        for (let i = 0; i < constraintS1.length; i++) {
+            constraintS1[i] = constraintS1[i] / pivot
+        }
+
+        //changing the value of the other row values
+        for (let i = 0; i < constraintS2.length; i++) {
+            constraintS2[i] = negateNum * constraintS1[i] + constraintS2[i]
+        }
+        console.log(constraintS2)
+
+        //for calculating ZJ values
+        for (let i = 0; i < constraintS1.length; i++) {
+            var tmpArr1 = cjColumn[0] * constraintS1[i]
+            var tmpArr2 = cjColumn[1] * constraintS2[i]
+
+            ZjVal[i] = tmpArr1 + tmpArr2
+        }
+        console.log(ZjVal)
+
+
+
+
+    } else {
+        pivotRow = constraintS2
+        otherRow = constraintS1
+        cjColumn[pivotIndex] = highestNum
+        solutionMix[1] = productionMix[1]
+        pivot = constraintS2[pivotIndex]
+        cjCol = cjColumn[1]
+        othercjCol = cjColumn[0]
+        slackVal2 = productionMix[pivotIndex]
+        cjColumn[pivotIndex] = objFunc[pivotIndex]
+        var negateNum = -constraintS1[pivotIndex]
+        //updating the constraints arrays and divide the entries by the pivot
+        for (let i = 0; i < constraintS2.length; i++) {
+            constraintS2[i] = constraintS2[i] / pivot
+        }
+        //for the other row
+        for (let i = 0; i < constraintS2.length; i++) {
+            constraintS1[i] = negateNum * constraintS2[i] + constraintS1[i]
+            // 
+        }
+
+        //calculating Zj values
+        for (let i = 0; i < constraintS1.length; i++) {
+            var tmpArr1 = cjColumn[0] * constraintS1[i]
+            var tmpArr2 = cjColumn[1] * constraintS2[i]
+
+            ZjVal[i] = tmpArr1 + tmpArr2
+        }
+        console.log(ZjVal)
+
+    }
+
+    console.log(pivotIndex)
+
+    createTableHeadings();
+
     //create data section
-    var secondDataSectTr = document.createElement('tr')
-    secondDataSectTr.setAttribute('id', 'firstdataSect2ndTable')
-    var tdobj = document.createElement('td')
-    var tdSlack = document.createElement('td')
-    tdobj.textContent = cjColumn[pivotIndex]
-    tdSlack.textContent = productionMix[pivotIndex]
 
-    secondDataSectTr.appendChild(tdobj)
-    secondDataSectTr.appendChild(tdSlack)
-    addRow(constraintS1, secondDataSectTr)
-    newTb.appendChild(secondDataSectTr)
+    //cj and solution mix
+    var constraint1Tr = document.createElement('tr')
+    var cjTd = document.createElement('td')
+    var solutionMixTd = document.createElement('td')
+    cjTd.textContent = cjColumn[0]
+    solutionMixTd.textContent = solutionMix[0]
+    constraint1Tr.appendChild(cjTd)
+    constraint1Tr.appendChild(solutionMixTd);
+
+    //first constraints
+    for(let i = 0; i<constraintS1.length; i++){
+        var constraintS1Cell = document.createElement('td')
+        constraintS1Cell.textContent = constraintS1[i]
+        constraint1Tr.appendChild(constraintS1Cell)
+    }
+    secondTable.appendChild(constraint1Tr)
+    console.log(constraintS1)
+
+    //second constraints
+    var constraintS2Tr = document.createElement('tr')
+    var secondcjTd = document.createElement('td')
+    var secondSolutionMixTd = document.createElement('td')
+    secondcjTd.textContent = cjColumn[1]
+    secondSolutionMixTd.textContent = solutionMix[1]
+    constraintS2Tr.appendChild(secondcjTd)
+    constraintS2Tr.appendChild(secondSolutionMixTd);
+    for (var i=0 ; i <= constraintS2.length-1; i++)
+    {
+        var constraintS2Cell = document.createElement('td');
+        constraintS2Cell.textContent = constraintS2[i]
+        constraintS2Tr.appendChild(constraintS2Cell)
+    }
+    secondTable.appendChild(constraintS2Tr)
+    console.log(constraintS2)
 
 
+    //create ZJ
+    var newRow = document.createElement('tr')
+    newRow.id = 'ZjVal';
+    var blankCell = document.createElement('td')
+    blankCell.textContent = "-"
+    var newCell = document.createElement('td')
+    newCell.textContent = "Zj"
+    newRow.appendChild(blankCell);
+    newRow.appendChild(newCell)
+
+    for (let i = 0; i<ZjVal.length; i++){
+        var zjCell = document.createElement("td")
+        zjCell.textContent = ZjVal[i]
+        newRow.appendChild(zjCell)
+        
+    }
+    secondTable.appendChild(newRow)
 
 
+    
 
 
+    //problem is the value of Zj keeps on giving 0 results
+    console.log(ZjVal)
 
 
-
-
-
+    // createZJ(secondTable)
+    cjMinZjVal(secondTable)
+    checkIfOptimized(getOptimization)
+    // console.log(cjZjVal)
+    console.log(cjZjVal)
 }
 
 //creating event for the button
@@ -250,46 +391,16 @@ saveBtn.addEventListener("click", (e) => {
     cj2.textContent = cjColumn[1]
     S2.textContent = solutionMix[1]
     //adding Zj value
-    createZJ()
+    createZJ(myTable)
 
     //creating the  Cj-ZJ values
-    var cjMinZjVal = () => {
-        var newRow = document.createElement("tr")
-        newRow.id = 'CjZJRow'
-        var blankCell = document.createElement('td')
-        blankCell.textContent = "-"
-        var newCell = document.createElement('td')
-        newCell.textContent = 'Cj - Zj'
-        newRow.appendChild(blankCell)
-        newRow.appendChild(newCell)
-        myTable.appendChild(newRow)
 
 
-
-        //computing for the values of the CJ - Zj 
-        for (let i = 0; i < objFunc.length; i++) {
-            cjZjVal[i] = objFunc[i] - ZjVal[i]
-            var cjZjCell = document.createElement('td')
-            cjZjCell.textContent = cjZjVal[i]
-            newRow.appendChild(cjZjCell)
-            myTable.appendChild(newRow)
-
-        }
-        console.log(cjZjVal)
-    }
-
-    cjMinZjVal()
+    cjMinZjVal(myTable)
     checkIfOptimized()
-    console.log(isOPtimized)
     getOptimization()
 
     console.log(objFunc)
-
-
-
-
-
-
-
+    console.log(cjColumn)
 
 })
